@@ -8,10 +8,10 @@ import (
 )
 
 const (
+	port       = ":8090"
 	repos      = "https://api.github.com/users/diegom0ta/repos"
 	user       = "https://api.github.com/users/diegom0ta"
 	users      = "https://api.github.com/users"
-	port       = ":8090"
 	reposRoute = "/api/repos"
 	userRoute  = "/api/user"
 	usersRoute = "/api/users"
