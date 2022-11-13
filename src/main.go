@@ -2,43 +2,20 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
 )
 
-var srv = new(http.Server)
-
 const (
-	repos = "https://api.github.com/users/diegom0ta/repos"
-	user  = "https://api.github.com/users/diegom0ta"
-	users = "https://api.github.com/users"
+	repos      = "https://api.github.com/users/diegom0ta/repos"
+	user       = "https://api.github.com/users/diegom0ta"
+	users      = "https://api.github.com/users"
+	port       = ":8090"
+	reposRoute = "/api/repos"
+	userRoute  = "/api/user"
+	usersRoute = "/api/users"
 )
-
-func getRepos() io.ReadCloser {
-	resp, err := http.Get(repos)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return resp.Body
-}
-
-func getUser() io.ReadCloser {
-	resp, err := http.Get(user)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return resp.Body
-}
-
-func getUsers() io.ReadCloser {
-	resp, err := http.Get(users)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return resp.Body
-}
 
 func writeResponse(rc io.ReadCloser) string {
 	buf := new(bytes.Buffer)
@@ -48,14 +25,41 @@ func writeResponse(rc io.ReadCloser) string {
 	return string(respBytes)
 }
 
+func reposHandler(w http.ResponseWriter, r *http.Request) {
+	resp, err := http.Get(repos)
+	if err != nil {
+		log.Fatal(err)
+	}
+	wr := writeResponse(resp.Body)
+	log.Print(w.Write([]byte(wr)))
+}
+
+func userHandler(w http.ResponseWriter, r *http.Request) {
+	resp, err := http.Get(user)
+	if err != nil {
+		log.Fatal(err)
+	}
+	wr := writeResponse(resp.Body)
+	log.Print(w.Write([]byte(wr)))
+}
+
+func usersHandler(w http.ResponseWriter, r *http.Request) {
+	resp, err := http.Get(users)
+	if err != nil {
+		log.Fatal(err)
+	}
+	wr := writeResponse(resp.Body)
+	log.Print(w.Write([]byte(wr)))
+}
+
 func main() {
-	listRepos := getRepos()
-	fmt.Print(writeResponse(listRepos))
+	mux := http.NewServeMux()
+	mux.HandleFunc(reposRoute, reposHandler)
+	mux.HandleFunc(userRoute, userHandler)
+	mux.HandleFunc(usersRoute, usersHandler)
 
-	usr := getUser()
-	fmt.Print(writeResponse(usr))
-
-	listUsers := getUsers()
-	fmt.Print(writeResponse(listUsers))
-
+	err := http.ListenAndServe(port, mux)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
