@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
+
+	h "github.com/diegom0ta/goapi/src/handlers"
 )
 
 const (
@@ -14,9 +16,9 @@ const (
 
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc(reposRoute, handlers.ReposHandler)
-	mux.HandleFunc(userRoute, handlers.UserHandler)
-	mux.HandleFunc(usersRoute, handlers.UsersHandler)
+	mux.HandleFunc(reposRoute, h.ReposHandler)
+	mux.HandleFunc(userRoute, h.UserHandler)
+	mux.HandleFunc(usersRoute, h.UsersHandler)
 
 	err := http.ListenAndServe(port, mux)
 	if err != nil {
