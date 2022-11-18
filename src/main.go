@@ -24,6 +24,9 @@ func main() {
 	mux.HandleFunc(userRoute, h.UserHandler)
 	mux.HandleFunc(usersRoute, h.UsersHandler)
 
+	if port == "" {
+		port = ":5000"
+	}
 	err := http.ListenAndServe(port, mux)
 	if err != nil {
 		log.Fatal(err)
