@@ -3,12 +3,14 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	h "github.com/diegom0ta/goapi/src/handlers"
 )
 
+var port = os.Getenv("PORT")
+
 const (
-	port       = ":8090"
 	homeRoute  = "/"
 	reposRoute = "/api/repos"
 	userRoute  = "/api/user"
