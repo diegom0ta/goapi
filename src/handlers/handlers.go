@@ -13,6 +13,10 @@ const (
 	users = "https://api.github.com/users"
 )
 
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Method: GET - Endpoints: /api/repos, /api/user, /api/users"))
+}
+
 func ReposHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := http.Get(repos)
 	if err != nil {
