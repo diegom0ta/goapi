@@ -14,7 +14,7 @@ const (
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Method: GET - Endpoints: /api/repos, /api/user, /api/users"))
+	w.Write([]byte("Method: GET - Endpoints: /api/repos, /api/user, /api/users\n"))
 }
 
 func ReposHandler(w http.ResponseWriter, r *http.Request) {

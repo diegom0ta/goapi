@@ -27,6 +27,9 @@ func main() {
 	if port == "" {
 		port = "9000"
 	}
+
+	log.Printf("Server listening on port: %s\n", port)
+
 	err := http.ListenAndServe(":"+port, mux)
 	if err != nil {
 		log.Fatal(err)
