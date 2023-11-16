@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 
 	h "github.com/diegom0ta/goapi/src/handlers"
 )
@@ -28,10 +32,28 @@ func main() {
 		port = "9000"
 	}
 
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	srv := http.Server{
+		Addr:    ":" + port,
+		Handler: mux,
+	}
+
 	log.Printf("Server listening on port: %s\n", port)
 
-	err := http.ListenAndServe(":"+port, mux)
-	if err != nil {
-		log.Fatal(err)
+	go func() {
+		if err := srv.ListenAndServe(); err != nil &&
+			!errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("Listen and serve error: %v\n", err)
+		}
+	}()
+
+	<-ctx.Done()
+
+	log.Println("Got interruption signal")
+
+	if err := srv.Shutdown(context.TODO()); err != nil {
+		log.Printf("Server shutdown returned an error: %v\n", err)
 	}
 }
