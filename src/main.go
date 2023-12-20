@@ -29,7 +29,7 @@ func main() {
 	mux.HandleFunc(usersRoute, h.UsersHandler)
 
 	if port == "" {
-		port = "9000"
+		port = "8081"
 	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
